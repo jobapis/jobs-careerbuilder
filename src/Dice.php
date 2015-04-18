@@ -5,6 +5,13 @@ use JobBrander\Jobs\Client\Job;
 class Dice extends AbstractProvider
 {
     /**
+     * Job provider
+     *
+     * @var string
+     */
+    protected $source = 'Dice';
+
+    /**
      * Returns the standardized job object
      *
      * @param array $payload
@@ -19,7 +26,7 @@ class Dice extends AbstractProvider
 
         $job = new Job([
             'title' => $payload['jobTitle'],
-            'source' => 'Dice',
+            'source' => $this->source,
             'dates' => $payload['date'],
             'url' => $payload['detailUrl'],
         ]);
