@@ -19,12 +19,10 @@ class Dice extends AbstractProvider
 
         $job = new Job([
             'title' => $payload['jobTitle'],
-            'dates' => $payload['date'],
             'url' => $payload['detailUrl'],
+            'company' => $payload['company'],
+            'location' => $payload['location'],
         ]);
-
-        $job->addCompanies($payload['company'])
-            ->addLocations($payload['location']);
 
         return $job;
     }
