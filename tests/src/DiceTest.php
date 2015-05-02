@@ -136,11 +136,12 @@ class DiceTest extends \PHPUnit_Framework_TestCase
 
     public function testItCanConnect()
     {
-        $listings = ['resultItemList' => [
-            ['jobTitle' => uniqid(), 'company' => uniqid()],
-        ]];
+        $job_count = rand(2,10);
+        $listings = ['resultItemList' => $this->createJobArray($job_count)];
+        $source = $this->client->getSource();
+        $keyword = 'project manager';
 
-        $this->client->setKeyword('project manager')
+        $this->client->setKeyword($keyword)
             ->setCity('Chicago')
             ->setState('IL');
 
@@ -155,5 +156,33 @@ class DiceTest extends \PHPUnit_Framework_TestCase
         $this->client->setClient($http);
 
         $results = $this->client->getJobs();
+
+        foreach ($listings['resultItemList'] as $i => $result) {
+            $this->assertEquals($listings['resultItemList'][$i]['jobTitle'], $results->get($i)->title);
+            $this->assertEquals($listings['resultItemList'][$i]['company'], $results->get($i)->company);
+            $this->assertEquals($listings['resultItemList'][$i]['location'], $results->get($i)->location);
+            $this->assertEquals($listings['resultItemList'][$i]['detailUrl'], $results->get($i)->url);
+            $this->assertEquals($keyword, $results->get($i)->query);
+            $this->assertEquals($source, $results->get($i)->source);
+        }
+
+        $this->assertEquals(count($listings['resultItemList']), $results->count());
+
+    }
+
+    private function createJobArray($num = 10) {
+        $jobs = [];
+        $i = 0;
+        while ($i < 10) {
+            $jobs[] = [
+                'jobTitle' => uniqid(),
+                'company' => uniqid(),
+                'location' => uniqid(),
+                'date' => uniqid(),
+                'detailUrl' => uniqid(),
+            ];
+            $i++;
+        }
+        return $jobs;
     }
 }
