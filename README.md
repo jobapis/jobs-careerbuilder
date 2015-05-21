@@ -22,7 +22,7 @@ composer require jobbrander/jobs-careerbuilder
 Usage is the same as Job Branders's Jobs Client, using `\JobBrander\Jobs\Client\Provider\Careerbuilder` as the provider.
 
 ```php
-$client = new JobBrander\Jobs\Client\Provider\Careerbuilder();
+$client = new JobBrander\Jobs\Client\Provider\Careerbuilder(['developerKey' => 'YOUR CAREERBUILDER DEVELOPER KEY']);
 
 // Search for 200 job listings for 'project manager' in Chicago, IL
 $jobs = $client->setKeyword('project manager')
