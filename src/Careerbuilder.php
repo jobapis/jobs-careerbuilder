@@ -41,16 +41,33 @@ class Careerbuilder extends AbstractProvider
      */
     public function createJobObject($payload)
     {
-        echo "<pre>"; print_r($payload); exit;
-        $defaults = ['jobTitle', 'company', 'location', 'date', 'detailUrl'];
+        $defaults = [
+            'Company',
+            'OnetCode',
+            'ONetFriendlyTitle',
+            'EmploymentType',
+            'EducationRequired',
+            'ExperienceRequired',
+            'JobDetailsURL',
+            'Location',
+            'City',
+            'State',
+            'PostedTime',
+            'Pay',
+            'JobTitle',
+            'CompanyImageURL',
+            'Skills',
+        ];
 
         $payload = static::parseAttributeDefaults($payload, $defaults);
+        // echo "<pre>"; print_r($payload); exit;
 
         $job = new Job([
-            'title' => $payload['jobTitle'],
-            'url' => $payload['detailUrl'],
-            'company' => $payload['company'],
-            'location' => $payload['location'],
+            'title' => $payload['JobTitle'],
+            'url' => $payload['JobDetailsURL'],
+            'company' => $payload['Company'],
+            'location' => $payload['Location'],
+            // More need to be added here, just testing
         ]);
 
         return $job;
