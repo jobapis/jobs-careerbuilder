@@ -5,6 +5,34 @@ use JobBrander\Jobs\Client\Job;
 class Careerbuilder extends AbstractProvider
 {
     /**
+     * Developer Key
+     *
+     * @var string
+     */
+    protected $developerKey;
+
+    /**
+     * Host Site
+     *
+     * @var string
+     */
+    protected $hostSite;
+
+    /**
+     * Use Facets (for city/state)
+     *
+     * @var string
+     */
+    protected $useFacets;
+
+    /**
+     * Enable Company Collapse (must be true to set count)
+     *
+     * @var string
+     */
+    protected $enableCompanyCollapse;
+
+    /**
      * Returns the standardized job object
      *
      * @param array $payload
@@ -13,6 +41,7 @@ class Careerbuilder extends AbstractProvider
      */
     public function createJobObject($payload)
     {
+        echo "<pre>"; print_r($payload); exit;
         $defaults = ['jobTitle', 'company', 'location', 'date', 'detailUrl'];
 
         $payload = static::parseAttributeDefaults($payload, $defaults);
@@ -28,13 +57,43 @@ class Careerbuilder extends AbstractProvider
     }
 
     /**
+     * Get host site
+     *
+     * @return string
+     */
+    public function getHostSite()
+    {
+        return 'US';
+    }
+
+    /**
+     * Get Use Facets
+     *
+     * @return string
+     */
+    public function getUseFacets()
+    {
+        return 'true';
+    }
+
+    /**
+     * Get Enable Company Collapse
+     *
+     * @return string
+     */
+    public function getEnableCompanyCollapse()
+    {
+        return 'true';
+    }
+
+    /**
      * Get data format
      *
      * @return string
      */
     public function getFormat()
     {
-        return 'json';
+        return 'xml';
     }
 
     /**
@@ -44,7 +103,7 @@ class Careerbuilder extends AbstractProvider
      */
     public function getListingsPath()
     {
-        return 'resultItemList';
+        return 'Results.JobSearchResult';
     }
 
     /**
@@ -65,11 +124,14 @@ class Careerbuilder extends AbstractProvider
     public function getQueryString()
     {
         $query_params = [
-            'text' => 'getKeyword',
-            'state' => 'getState',
-            'city' => 'getCity',
-            'page' => 'getPage',
-            'pgcnt' => 'getCount',
+            'DeveloperKey' => 'getDeveloperKey',
+            'Keywords' => 'getKeyword',
+            'FacetState' => 'getState',
+            'FacetCity' => 'getCity',
+            'PageNumber' => 'getPage',
+            'PerPage' => 'getCount',
+            'UseFacets' => 'getUseFacets',
+            'EnableCompanyCollapse' => 'getEnableCompanyCollapse',
         ];
 
         $query_string = [];
@@ -93,7 +155,7 @@ class Careerbuilder extends AbstractProvider
     {
         $query_string = $this->getQueryString();
 
-        return 'http://service.dice.com/api/rest/jobsearch/v1/simple.json?'.$query_string;
+        return 'http://api.careerbuilder.com/v2/jobsearch/?'.$query_string;
     }
 
     /**
