@@ -1,13 +1,13 @@
 <?php namespace JobBrander\Jobs\Client\Providers\Test;
 
-use JobBrander\Jobs\Client\Providers\Dice;
+use JobBrander\Jobs\Client\Providers\Careerbuilder;
 use Mockery as m;
 
-class DiceTest extends \PHPUnit_Framework_TestCase
+class CareerbuilderTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->client = new Dice();
+        $this->client = new Careerbuilder();
     }
 
     public function testItWillUseJsonFormat()

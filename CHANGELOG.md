@@ -1,10 +1,10 @@
 # Changelog
-All Notable changes to `jobs-indeed` will be documented in this file
+All Notable changes to `jobs-careerbuilder` will be documented in this file
 
-## 0.1.0 - 2015-04-15
+## 0.1.0 - 2015-05-21
 
 ### Added
-- Nothing
+- Initial release
 
 ### Deprecated
 - Nothing

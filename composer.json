@@ -1,14 +1,14 @@
 {
-    "name": "jobbrander/jobs-dice",
+    "name": "jobbrander/jobs-careerbuilder",
     "type": "library",
-    "description": "Making it simple to integrate your application with Dice Jobs API.",
+    "description": "Making it simple to integrate your application with Careerbuilder Jobs API.",
     "keywords": [
         "jobs",
         "api client",
         "object",
-        "dice"
+        "careerbuilder"
     ],
-    "homepage": "https://github.com/JobBrander/jobs-dice",
+    "homepage": "https://github.com/JobBrander/jobs-careerbuilder",
     "license": "Apache-2.0",
     "authors": [
         {

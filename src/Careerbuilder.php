@@ -2,7 +2,7 @@
 
 use JobBrander\Jobs\Client\Job;
 
-class Dice extends AbstractProvider
+class Careerbuilder extends AbstractProvider
 {
     /**
      * Returns the standardized job object
