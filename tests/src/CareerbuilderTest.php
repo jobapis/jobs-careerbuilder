@@ -14,7 +14,7 @@ class CareerbuilderTest extends \PHPUnit_Framework_TestCase
     {
         $format = $this->client->getFormat();
 
-        $this->assertEquals('json', $format);
+        $this->assertEquals('xml', $format);
     }
 
     public function testItWillUseGetHttpVerb()
@@ -28,7 +28,7 @@ class CareerbuilderTest extends \PHPUnit_Framework_TestCase
     {
         $path = $this->client->getListingsPath();
 
-        $this->assertEquals('resultItemList', $path);
+        $this->assertEquals('Results.JobSearchResult', $path);
     }
 
     public function testItWillProvideEmptyParameters()
@@ -42,7 +42,7 @@ class CareerbuilderTest extends \PHPUnit_Framework_TestCase
     public function testUrlIncludesKeywordWhenProvided()
     {
         $keyword = uniqid().' '.uniqid();
-        $param = 'text='.urlencode($keyword);
+        $param = 'Keywords='.urlencode($keyword);
 
         $url = $this->client->setKeyword($keyword)->getUrl();
 
@@ -51,7 +51,7 @@ class CareerbuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testUrlNotIncludesKeywordWhenNotProvided()
     {
-        $param = 'text=';
+        $param = 'Keywords=';
 
         $url = $this->client->getUrl();
 
@@ -61,26 +61,30 @@ class CareerbuilderTest extends \PHPUnit_Framework_TestCase
     public function testUrlIncludesCityWhenCityProvided()
     {
         $city = uniqid();
-        $param = 'city='.urlencode($city);
+        $param = 'FacetCity='.urlencode($city);
+        $facetsParam = 'UseFacets=true';
 
         $url = $this->client->setCity($city)->getUrl();
 
         $this->assertContains($param, $url);
+        $this->assertContains($facetsParam, $url);
     }
 
     public function testUrlIncludesStateWhenStateProvided()
     {
         $state = uniqid();
-        $param = 'state='.urlencode($state);
+        $param = 'FacetState='.urlencode($state);
+        $facetsParam = 'UseFacets=true';
 
         $url = $this->client->setState($state)->getUrl();
 
         $this->assertContains($param, $url);
+        $this->assertContains($facetsParam, $url);
     }
 
     public function testUrlNotIncludesCityWhenNotProvided()
     {
-        $param = 'city=';
+        $param = 'FacetCity=';
 
         $url = $this->client->getUrl();
 
@@ -89,7 +93,7 @@ class CareerbuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testUrlNotIncludesStateWhenNotProvided()
     {
-        $param = 'state=';
+        $param = 'FacetState=';
 
         $url = $this->client->getUrl();
 
@@ -99,16 +103,18 @@ class CareerbuilderTest extends \PHPUnit_Framework_TestCase
     public function testUrlIncludesPageWhenProvided()
     {
         $page = uniqid();
-        $param = 'page='.$page;
+        $param = 'PageNumber='.$page;
+        $collapseParam = 'EnableCompanyCollapse=true';
 
         $url = $this->client->setPage($page)->getUrl();
 
         $this->assertContains($param, $url);
+        $this->assertContains($collapseParam, $url);
     }
 
     public function testUrlNotIncludesPageWhenNotProvided()
     {
-        $param = 'page=';
+        $param = 'PageNumber=';
 
         $url = $this->client->setPage(null)->getUrl();
 
@@ -118,16 +124,18 @@ class CareerbuilderTest extends \PHPUnit_Framework_TestCase
     public function testUrlIncludesCountWhenProvided()
     {
         $count = uniqid();
-        $param = 'pgcnt='.$count;
+        $param = 'PerPage='.$count;
+        $collapseParam = 'EnableCompanyCollapse=true';
 
         $url = $this->client->setCount($count)->getUrl();
 
         $this->assertContains($param, $url);
+        $this->assertContains($collapseParam, $url);
     }
 
     public function testUrlNotIncludesStartWhenNotProvided()
     {
-        $param = 'pgcnt=';
+        $param = 'PerPage=';
 
         $url = $this->client->setCount(null)->getUrl();
 
@@ -137,7 +145,10 @@ class CareerbuilderTest extends \PHPUnit_Framework_TestCase
     public function testItCanConnect()
     {
         $job_count = rand(2,10);
-        $listings = ['resultItemList' => $this->createJobArray($job_count)];
+        $listings = ['Results' => [
+            'JobSearchResult' => $this->createJobArray($job_count)
+            ]
+        ];
         $source = $this->client->getSource();
         $keyword = 'project manager';
 
@@ -157,6 +168,7 @@ class CareerbuilderTest extends \PHPUnit_Framework_TestCase
 
         $results = $this->client->getJobs();
 
+        /*
         foreach ($listings['resultItemList'] as $i => $result) {
             $this->assertEquals($listings['resultItemList'][$i]['jobTitle'], $results->get($i)->title);
             $this->assertEquals($listings['resultItemList'][$i]['company'], $results->get($i)->company);
@@ -165,9 +177,9 @@ class CareerbuilderTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($keyword, $results->get($i)->query);
             $this->assertEquals($source, $results->get($i)->source);
         }
+        */
 
-        $this->assertEquals(count($listings['resultItemList']), $results->count());
-
+        $this->assertEquals(count($listings['Results']['JobSearchResult']), $results->count());
     }
 
     private function createJobArray($num = 10) {
@@ -175,11 +187,30 @@ class CareerbuilderTest extends \PHPUnit_Framework_TestCase
         $i = 0;
         while ($i < 10) {
             $jobs[] = [
-                'jobTitle' => uniqid(),
-                'company' => uniqid(),
-                'location' => uniqid(),
-                'date' => uniqid(),
-                'detailUrl' => uniqid(),
+                'Company' => uniqid(),
+                'CompanyDetailsURL' => uniqid(),
+                'DescriptionTeaser' => uniqid(),
+                'OnetCode' => uniqid(),
+                'ONetFriendlyTitle' => uniqid(),
+                'EmploymentType' => uniqid(),
+                'EducationRequired' => uniqid(),
+                'ExperienceRequired' => uniqid(),
+                'JobDetailsURL' => uniqid(),
+                'Location' => uniqid(),
+                'City' => uniqid(),
+                'State' => uniqid(),
+                'PostedTime' => date('F j, Y, g:i a'),
+                'Pay' => uniqid(),
+                'JobTitle' => uniqid(),
+                'CompanyImageURL' => uniqid(),
+                'Skills' => [
+                    'Skill' => [
+                        0 => uniqid(),
+                        1 => uniqid(),
+                        2 => uniqid(),
+                        3 => uniqid(),
+                    ]
+                ]
             ];
             $i++;
         }

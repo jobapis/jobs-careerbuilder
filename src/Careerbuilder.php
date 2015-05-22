@@ -45,6 +45,7 @@ class Careerbuilder extends AbstractProvider
             'Company',
             'CompanyDetailsURL',
             'DescriptionTeaser',
+            'DID',
             'OnetCode',
             'ONetFriendlyTitle',
             'EmploymentType',
@@ -65,7 +66,7 @@ class Careerbuilder extends AbstractProvider
 
         $job = new Job([
             'description' => $payload['DescriptionTeaser'],
-            'type' => $payload['EmploymentType'],
+            'employmentType' => $payload['EmploymentType'],
             'title' => $payload['JobTitle'],
             'url' => $payload['JobDetailsURL'],
             'company' => $payload['Company'],
