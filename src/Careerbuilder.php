@@ -43,6 +43,8 @@ class Careerbuilder extends AbstractProvider
     {
         $defaults = [
             'Company',
+            'CompanyDetailsURL',
+            'DescriptionTeaser',
             'OnetCode',
             'ONetFriendlyTitle',
             'EmploymentType',
@@ -60,15 +62,32 @@ class Careerbuilder extends AbstractProvider
         ];
 
         $payload = static::parseAttributeDefaults($payload, $defaults);
-        // echo "<pre>"; print_r($payload); exit;
 
         $job = new Job([
+            'description' => $payload['DescriptionTeaser'],
+            'type' => $payload['EmploymentType'],
             'title' => $payload['JobTitle'],
             'url' => $payload['JobDetailsURL'],
             'company' => $payload['Company'],
             'location' => $payload['Location'],
-            // More need to be added here, just testing
+            'educationRequirements' => $payload['EducationRequired'],
+            'experienceRequirements' => $payload['ExperienceRequired'],
+            'minimumSalary' => $payload['Pay'],
+            'sourceId' => $payload['DID'],
         ]);
+
+        $job->setOccupationalCategoryWithCodeAndTitle(
+                $payload['OnetCode'],
+                $payload['ONetFriendlyTitle'])
+            ->setCompanyUrl($payload['CompanyDetailsURL'])
+            ->setCity($payload['City'])
+            ->setState($payload['State'])
+            ->setDatePostedAsString($payload['PostedTime'])
+            ->setCompanyLogo($payload['CompanyImageURL']);
+
+        if (isset($payload['Skills']['Skill'])) {
+            $job->setSkills(implode(', ', $payload['Skills']['Skill']));
+        }
 
         return $job;
     }
