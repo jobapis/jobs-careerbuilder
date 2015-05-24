@@ -80,8 +80,7 @@ class Careerbuilder extends AbstractProvider
         $job->setOccupationalCategoryWithCodeAndTitle(
             $payload['OnetCode'],
             $payload['ONetFriendlyTitle']
-            )
-            ->setCompanyUrl($payload['CompanyDetailsURL'])
+        )->setCompanyUrl($payload['CompanyDetailsURL'])
             ->setCity($payload['City'])
             ->setState($payload['State'])
             ->setDatePostedAsString($payload['PostedTime'])
