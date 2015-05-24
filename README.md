@@ -7,7 +7,7 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/JobBrander/jobs-careerbuilder.svg?style=flat-square)](https://scrutinizer-ci.com/g/JobBrander/jobs-careerbuilder)
 [![Total Downloads](https://img.shields.io/packagist/dt/jobbrander/jobs-careerbuilder.svg?style=flat-square)](https://packagist.org/packages/jobbrander/jobs-careerbuilder)
 
-This package provides Indeed Jobs API support for the JobBrander's [Jobs Client](https://github.com/JobBrander/jobs-common).
+This package provides Careerbuilder Jobs API support for the JobBrander's [Jobs Client](https://github.com/JobBrander/jobs-common).
 
 ## Installation
 
@@ -42,13 +42,13 @@ $ ./vendor/bin/phpunit
 
 ## Contributing
 
-Please see [CONTRIBUTING](https://github.com/jobbrander/jobs-dice/blob/master/CONTRIBUTING.md) for details.
+Please see [CONTRIBUTING](https://github.com/jobbrander/jobs-careerbuilder/blob/master/CONTRIBUTING.md) for details.
 
 ## Credits
 
 - [Karl Hughes](https://github.com/karllhughes)
 - [Steven Maguire](https://github.com/stevenmaguire)
-- [All Contributors](https://github.com/jobbrander/jobs-dice/contributors)
+- [All Contributors](https://github.com/jobbrander/jobs-careerbuilder/contributors)
 
 ## License
 
