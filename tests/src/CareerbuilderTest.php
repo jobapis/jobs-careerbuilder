@@ -17,6 +17,13 @@ class CareerbuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('xml', $format);
     }
 
+    public function testItUsesUSHostSite()
+    {
+        $hostSite = $this->client->getHostSite();
+
+        $this->assertEquals('US', $hostSite);
+    }
+
     public function testItWillUseGetHttpVerb()
     {
         $verb = $this->client->getVerb();
@@ -168,16 +175,14 @@ class CareerbuilderTest extends \PHPUnit_Framework_TestCase
 
         $results = $this->client->getJobs();
 
-        /*
-        foreach ($listings['resultItemList'] as $i => $result) {
-            $this->assertEquals($listings['resultItemList'][$i]['jobTitle'], $results->get($i)->title);
-            $this->assertEquals($listings['resultItemList'][$i]['company'], $results->get($i)->company);
-            $this->assertEquals($listings['resultItemList'][$i]['location'], $results->get($i)->location);
-            $this->assertEquals($listings['resultItemList'][$i]['detailUrl'], $results->get($i)->url);
+        foreach ($listings['Results']['JobSearchResult'] as $i => $result) {
+            $this->assertEquals($result['JobTitle'], $results->get($i)->title);
+            $this->assertEquals($result['Company'], $results->get($i)->company);
+            $this->assertEquals($result['Location'], $results->get($i)->location);
+            $this->assertEquals($result['JobDetailsURL'], $results->get($i)->url);
             $this->assertEquals($keyword, $results->get($i)->query);
             $this->assertEquals($source, $results->get($i)->source);
         }
-        */
 
         $this->assertEquals(count($listings['Results']['JobSearchResult']), $results->count());
     }
