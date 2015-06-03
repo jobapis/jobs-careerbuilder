@@ -204,26 +204,4 @@ class Careerbuilder extends AbstractProvider
     {
         return 'GET';
     }
-
-    /**
-     * Makes the api call and returns a collection of job objects
-     *
-     * @return  JobBrander\Jobs\Client\Collection
-     */
-    public function getJobs()
-    {
-        $client = $this->client;
-        $verb = strtolower($this->getVerb());
-        $url = $this->getUrl();
-        $options = $this->getHttpClientOptions();
-
-        $response = $client->{$verb}($url, $options);
-
-        $payload = $response->{$this->getFormat()}();
-        $payload = json_decode(json_encode($payload), true);
-
-        $listings = $this->getRawListings($payload);
-
-        return $this->getJobsCollectionFromListings($listings);
-    }
 }
