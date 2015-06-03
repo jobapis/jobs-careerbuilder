@@ -28,7 +28,7 @@ $client = new JobBrander\Jobs\Client\Provider\Careerbuilder(['developerKey' => '
 $jobs = $client->setKeyword('project manager')
     ->setCity('Chicago')
     ->setState('IL')
-    ->setCount(200)
+    ->setCount(100)
     ->getJobs();
 ```
 
