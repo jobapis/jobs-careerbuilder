@@ -149,76 +149,45 @@ class CareerbuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertNotContains($param, $url);
     }
 
-    public function testItCanConnect()
+    public function testItCanCreateJobFromPayload()
     {
-        $job_count = rand(2,10);
-        $listings = ['Results' => [
-            'JobSearchResult' => $this->createJobArray($job_count)
-            ]
-        ];
-        $source = $this->client->getSource();
-        $keyword = 'project manager';
+        $city = uniqid();
+        $this->client->setCity($city);
+        $payload = $this->createJobArray();
 
-        $this->client->setKeyword($keyword)
-            ->setCity('Chicago')
-            ->setState('IL');
+        $results = $this->client->createJobObject($payload);
 
-        $response = m::mock('GuzzleHttp\Message\Response');
-        $response->shouldReceive($this->client->getFormat())->once()->andReturn($listings);
-
-        $http = m::mock('GuzzleHttp\Client');
-        $http->shouldReceive(strtolower($this->client->getVerb()))
-            ->with($this->client->getUrl(), $this->client->getHttpClientOptions())
-            ->once()
-            ->andReturn($response);
-        $this->client->setClient($http);
-
-        $results = $this->client->getJobs();
-
-        foreach ($listings['Results']['JobSearchResult'] as $i => $result) {
-            $this->assertEquals($result['JobTitle'], $results->get($i)->title);
-            $this->assertEquals($result['Company'], $results->get($i)->company);
-            $this->assertEquals($result['Location'], $results->get($i)->location);
-            $this->assertEquals($result['JobDetailsURL'], $results->get($i)->url);
-            $this->assertEquals($keyword, $results->get($i)->query);
-            $this->assertEquals($source, $results->get($i)->source);
-        }
-
-        $this->assertEquals(count($listings['Results']['JobSearchResult']), $results->count());
+        $this->assertEquals($payload['JobTitle'], $results->title);
+        $this->assertEquals($payload['DescriptionTeaser'], $results->description);
+        $this->assertEquals($payload['JobDetailsURL'], $results->url);
     }
 
-    private function createJobArray($num = 10) {
-        $jobs = [];
-        $i = 0;
-        while ($i < 10) {
-            $jobs[] = [
-                'Company' => uniqid(),
-                'CompanyDetailsURL' => uniqid(),
-                'DescriptionTeaser' => uniqid(),
-                'OnetCode' => uniqid(),
-                'ONetFriendlyTitle' => uniqid(),
-                'EmploymentType' => uniqid(),
-                'EducationRequired' => uniqid(),
-                'ExperienceRequired' => uniqid(),
-                'JobDetailsURL' => uniqid(),
-                'Location' => uniqid(),
-                'City' => uniqid(),
-                'State' => uniqid(),
-                'PostedTime' => date('F j, Y, g:i a'),
-                'Pay' => uniqid(),
-                'JobTitle' => uniqid(),
-                'CompanyImageURL' => uniqid(),
-                'Skills' => [
-                    'Skill' => [
-                        0 => uniqid(),
-                        1 => uniqid(),
-                        2 => uniqid(),
-                        3 => uniqid(),
-                    ]
+    private function createJobArray() {
+        return [
+            'Company' => uniqid(),
+            'CompanyDetailsURL' => uniqid(),
+            'DescriptionTeaser' => uniqid(),
+            'OnetCode' => uniqid(),
+            'ONetFriendlyTitle' => uniqid(),
+            'EmploymentType' => uniqid(),
+            'EducationRequired' => uniqid(),
+            'ExperienceRequired' => uniqid(),
+            'JobDetailsURL' => uniqid(),
+            'Location' => uniqid(),
+            'City' => uniqid(),
+            'State' => uniqid(),
+            'PostedTime' => date('F j, Y, g:i a'),
+            'Pay' => uniqid(),
+            'JobTitle' => uniqid(),
+            'CompanyImageURL' => uniqid(),
+            'Skills' => [
+                'Skill' => [
+                    0 => uniqid(),
+                    1 => uniqid(),
+                    2 => uniqid(),
+                    3 => uniqid(),
                 ]
-            ];
-            $i++;
-        }
-        return $jobs;
+            ]
+        ];
     }
 }
