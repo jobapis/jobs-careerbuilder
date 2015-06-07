@@ -55,7 +55,7 @@ class Careerbuilder extends AbstractProvider
             'Location',
             'City',
             'State',
-            'PostedTime',
+            'PostedDate',
             'Pay',
             'JobTitle',
             'CompanyImageURL',
@@ -83,7 +83,7 @@ class Careerbuilder extends AbstractProvider
         )->setCompanyUrl($payload['CompanyDetailsURL'])
             ->setCity($payload['City'])
             ->setState($payload['State'])
-            ->setDatePostedAsString($payload['PostedTime'])
+            ->setDatePostedAsString($payload['PostedDate'])
             ->setCompanyLogo($payload['CompanyImageURL']);
 
         if (isset($payload['Skills']['Skill'])) {
