@@ -30,16 +30,16 @@ class Careerbuilder extends AbstractProvider
      *
      * @var string
      */
-    protected $enableCompanyCollapse;
+    protected $companyCollapse;
 
     /**
      * Returns the standardized job object
      *
-     * @param array $payload
+     * @param array $payload Raw job payload from the API
      *
      * @return \JobBrander\Jobs\Client\Job
      */
-    public function createJobObject($payload)
+    public function createJobObject($payload = [])
     {
         $defaults = [
             'Company',
@@ -64,7 +64,8 @@ class Careerbuilder extends AbstractProvider
 
         $payload = static::parseAttributeDefaults($payload, $defaults);
 
-        $job = new Job([
+        $job = new Job(
+            [
             'description' => $payload['DescriptionTeaser'],
             'employmentType' => $payload['EmploymentType'],
             'title' => $payload['JobTitle'],
@@ -75,7 +76,8 @@ class Careerbuilder extends AbstractProvider
             'experienceRequirements' => $payload['ExperienceRequired'],
             'minimumSalary' => $payload['Pay'],
             'sourceId' => $payload['DID'],
-        ]);
+            ]
+        );
 
         $job->setOccupationalCategoryWithCodeAndTitle(
             $payload['OnetCode'],
@@ -118,7 +120,7 @@ class Careerbuilder extends AbstractProvider
      *
      * @return string
      */
-    public function getEnableCompanyCollapse()
+    public function getCompanyCollapse()
     {
         return 'true';
     }
@@ -136,7 +138,7 @@ class Careerbuilder extends AbstractProvider
     /**
      * Get listings path
      *
-     * @return  string
+     * @return string
      */
     public function getListingsPath()
     {
@@ -146,7 +148,7 @@ class Careerbuilder extends AbstractProvider
     /**
      * Get parameters
      *
-     * @return  array
+     * @return array
      */
     public function getParameters()
     {
@@ -160,7 +162,7 @@ class Careerbuilder extends AbstractProvider
      */
     public function getQueryString()
     {
-        $query_params = [
+        $queryParams = [
             'DeveloperKey' => 'getDeveloperKey',
             'Keywords' => 'getKeyword',
             'FacetState' => 'getState',
@@ -168,37 +170,39 @@ class Careerbuilder extends AbstractProvider
             'PageNumber' => 'getPage',
             'PerPage' => 'getCount',
             'UseFacets' => 'getUseFacets',
-            'EnableCompanyCollapse' => 'getEnableCompanyCollapse',
+            'EnableCompanyCollapse' => 'getCompanyCollapse',
         ];
 
-        $query_string = [];
+        $queryString = [];
 
-        array_walk($query_params, function ($value, $key) use (&$query_string) {
-            $computed_value = $this->$value();
-            if (!is_null($computed_value)) {
-                $query_string[$key] = $computed_value;
+        array_walk(
+            $queryParams, function ($value, $key) use (&$queryString) {
+                $computedValue = $this->$value();
+                if (!is_null($computedValue)) {
+                    $queryString[$key] = $computedValue;
+                }
             }
-        });
+        );
 
-        return http_build_query($query_string);
+        return http_build_query($queryString);
     }
 
     /**
      * Get url
      *
-     * @return  string
+     * @return string
      */
     public function getUrl()
     {
-        $query_string = $this->getQueryString();
+        $queryString = $this->getQueryString();
 
-        return 'http://api.careerbuilder.com/v2/jobsearch/?'.$query_string;
+        return 'http://api.careerbuilder.com/v2/jobsearch/?'.$queryString;
     }
 
     /**
      * Get http verb
      *
-     * @return  string
+     * @return string
      */
     public function getVerb()
     {
