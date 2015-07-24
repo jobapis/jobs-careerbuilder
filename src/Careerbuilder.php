@@ -176,8 +176,8 @@ class Careerbuilder extends AbstractProvider
         $queryString = [];
 
         array_walk(
-            $queryParams, function ($value,
-                $key) use (&$queryString) {
+            $queryParams,
+            function ($value, $key) use (&$queryString) {
                 $computedValue = $this->$value();
                 if (!is_null($computedValue)) {
                     $queryString[$key] = $computedValue;
