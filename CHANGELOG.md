@@ -13,6 +13,7 @@ All Notable changes to `jobs-careerbuilder` will be documented in this file
 
 ### Fixed
 - Single skill returned from API bug
+- Standardizing location format
 
 ### Removed
 - Nothing

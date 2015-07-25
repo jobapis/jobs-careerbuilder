@@ -71,7 +71,6 @@ class Careerbuilder extends AbstractProvider
             'title' => $payload['JobTitle'],
             'name' => $payload['JobTitle'],
             'url' => $payload['JobDetailsURL'],
-            'location' => $payload['Location'],
             'educationRequirements' => $payload['EducationRequired'],
             'experienceRequirements' => $payload['ExperienceRequired'],
             'sourceId' => $payload['DID'],
@@ -83,6 +82,7 @@ class Careerbuilder extends AbstractProvider
             $payload['ONetFriendlyTitle']
         )->setCompany($payload['Company'])
             ->setCompanyUrl($payload['CompanyDetailsURL'])
+            ->setLocation($payload['City'].', '.$payload['State'])
             ->setCity($payload['City'])
             ->setState($payload['State'])
             ->setDatePostedAsString($payload['PostedDate'])
@@ -218,6 +218,6 @@ class Careerbuilder extends AbstractProvider
         } elseif (is_string($skills)) {
             return $skills;
         }
-        return NULL;
+        return null;
     }
 }
