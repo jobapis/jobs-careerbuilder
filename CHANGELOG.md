@@ -4,7 +4,8 @@ All Notable changes to `jobs-careerbuilder` will be documented in this file
 ## 0.1.4 - 2015-07-25
 
 ### Added
-- Nothing
+- Job listing name and title both set
+- Using setCompany method to set company name
 
 ### Deprecated
 - Nothing

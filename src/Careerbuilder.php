@@ -69,8 +69,8 @@ class Careerbuilder extends AbstractProvider
             'description' => $payload['DescriptionTeaser'],
             'employmentType' => $payload['EmploymentType'],
             'title' => $payload['JobTitle'],
+            'name' => $payload['JobTitle'],
             'url' => $payload['JobDetailsURL'],
-            'company' => $payload['Company'],
             'location' => $payload['Location'],
             'educationRequirements' => $payload['EducationRequired'],
             'experienceRequirements' => $payload['ExperienceRequired'],
@@ -82,7 +82,8 @@ class Careerbuilder extends AbstractProvider
         $job->setOccupationalCategoryWithCodeAndTitle(
             $payload['OnetCode'],
             $payload['ONetFriendlyTitle']
-        )->setCompanyUrl($payload['CompanyDetailsURL'])
+        )->setCompany($payload['Company'])
+            ->setCompanyUrl($payload['CompanyDetailsURL'])
             ->setCity($payload['City'])
             ->setState($payload['State'])
             ->setDatePostedAsString($payload['PostedDate'])
