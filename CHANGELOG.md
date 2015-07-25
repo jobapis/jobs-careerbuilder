@@ -6,6 +6,7 @@ All Notable changes to `jobs-careerbuilder` will be documented in this file
 ### Added
 - Job listing name and title both set
 - Using setCompany method to set company name
+- Using setMinimumSalary method to set salary
 
 ### Deprecated
 - Nothing

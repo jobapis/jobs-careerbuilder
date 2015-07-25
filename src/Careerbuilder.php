@@ -74,7 +74,6 @@ class Careerbuilder extends AbstractProvider
             'location' => $payload['Location'],
             'educationRequirements' => $payload['EducationRequired'],
             'experienceRequirements' => $payload['ExperienceRequired'],
-            'minimumSalary' => $payload['Pay'],
             'sourceId' => $payload['DID'],
             ]
         );
@@ -87,7 +86,8 @@ class Careerbuilder extends AbstractProvider
             ->setCity($payload['City'])
             ->setState($payload['State'])
             ->setDatePostedAsString($payload['PostedDate'])
-            ->setCompanyLogo($payload['CompanyImageURL']);
+            ->setCompanyLogo($payload['CompanyImageURL'])
+            ->setMinimumSalary($payload['Pay']);
 
         if (isset($payload['Skills']['Skill'])) {
             $job->setSkills($this->getSkillSet($payload['Skills']['Skill']));
