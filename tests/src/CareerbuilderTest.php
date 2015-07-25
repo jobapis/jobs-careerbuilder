@@ -166,6 +166,32 @@ class CareerbuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($payload['JobDetailsURL'], $results->url);
     }
 
+    public function testItCanCreateJobFromPayloadWhenSingleSkillProvided()
+    {
+        $city = uniqid();
+        $this->client->setCity($city);
+        $payload = $this->createJobArrayWithSingleSkill();
+
+        $results = $this->client->createJobObject($payload);
+
+        $this->assertEquals($payload['JobTitle'], $results->title);
+        $this->assertEquals($payload['DescriptionTeaser'], $results->description);
+        $this->assertEquals($payload['JobDetailsURL'], $results->url);
+    }
+
+    public function testItCanCreateJobFromPayloadWhenInvalidSkillProvided()
+    {
+        $city = uniqid();
+        $this->client->setCity($city);
+        $payload = $this->createJobArrayWithInvalidSkill();
+
+        $results = $this->client->createJobObject($payload);
+
+        $this->assertEquals($payload['JobTitle'], $results->title);
+        $this->assertEquals($payload['DescriptionTeaser'], $results->description);
+        $this->assertEquals($payload['JobDetailsURL'], $results->url);
+    }
+
     public function testItCanConnect()
     {
         $provider = $this->getProviderAttributes(['format' => 'xml']);
@@ -231,6 +257,54 @@ class CareerbuilderTest extends \PHPUnit_Framework_TestCase
                     2 => uniqid(),
                     3 => uniqid(),
                 ]
+            ]
+        ];
+    }
+
+    private function createJobArrayWithSingleSkill() {
+        return [
+            'Company' => uniqid(),
+            'CompanyDetailsURL' => uniqid(),
+            'DescriptionTeaser' => uniqid(),
+            'OnetCode' => uniqid(),
+            'ONetFriendlyTitle' => uniqid(),
+            'EmploymentType' => uniqid(),
+            'EducationRequired' => uniqid(),
+            'ExperienceRequired' => uniqid(),
+            'JobDetailsURL' => uniqid(),
+            'Location' => uniqid(),
+            'City' => uniqid(),
+            'State' => uniqid(),
+            'PostedDate' => date('m/d/Y'),
+            'Pay' => uniqid(),
+            'JobTitle' => uniqid(),
+            'CompanyImageURL' => uniqid(),
+            'Skills' => [
+                'Skill' =>  uniqid()
+            ]
+        ];
+    }
+
+    private function createJobArrayWithInvalidSkill() {
+        return [
+            'Company' => uniqid(),
+            'CompanyDetailsURL' => uniqid(),
+            'DescriptionTeaser' => uniqid(),
+            'OnetCode' => uniqid(),
+            'ONetFriendlyTitle' => uniqid(),
+            'EmploymentType' => uniqid(),
+            'EducationRequired' => uniqid(),
+            'ExperienceRequired' => uniqid(),
+            'JobDetailsURL' => uniqid(),
+            'Location' => uniqid(),
+            'City' => uniqid(),
+            'State' => uniqid(),
+            'PostedDate' => date('m/d/Y'),
+            'Pay' => uniqid(),
+            'JobTitle' => uniqid(),
+            'CompanyImageURL' => uniqid(),
+            'Skills' => [
+                'Skill' => new \stdClass()
             ]
         ];
     }

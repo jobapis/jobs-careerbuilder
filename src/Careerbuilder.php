@@ -89,7 +89,7 @@ class Careerbuilder extends AbstractProvider
             ->setCompanyLogo($payload['CompanyImageURL']);
 
         if (isset($payload['Skills']['Skill'])) {
-            $job->setSkills(implode(', ', $payload['Skills']['Skill']));
+            $job->setSkills($this->getSkillSet($payload['Skills']['Skill']));
         }
 
         return $job;
@@ -208,5 +208,15 @@ class Careerbuilder extends AbstractProvider
     public function getVerb()
     {
         return 'GET';
+    }
+
+    public function getSkillSet($skills)
+    {
+        if (is_array($skills)) {
+            return implode(', ', $skills);
+        } elseif (is_string($skills)) {
+            return $skills;
+        }
+        return NULL;
     }
 }
