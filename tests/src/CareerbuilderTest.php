@@ -153,6 +153,29 @@ class CareerbuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertNotContains($param, $url);
     }
 
+    public function testItCanConvertCurrencyStringToValue()
+    {
+        $min = rand(10, 1000);
+        $max = $min * rand(1, 10);
+
+        $string = "$".$min."k - $".$max."k/year";
+
+        $result = $this->client->parseSalariesFromString($string);
+
+        $this->assertEquals('$'.$min * 1000, $result['min']);
+        $this->assertEquals('$'.$max * 1000, $result['max']);
+    }
+
+    public function testItReturnsNullSalaryWhenInputInvalid()
+    {
+        $string = uniqid();
+
+        $result = $this->client->parseSalariesFromString($string);
+
+        $this->assertNull($result['min']);
+        $this->assertNull($result['max']);
+    }
+
     public function testItCanCreateJobFromPayload()
     {
         $city = uniqid();

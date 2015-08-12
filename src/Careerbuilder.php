@@ -77,6 +77,8 @@ class Careerbuilder extends AbstractProvider
             ]
         );
 
+        $pay = $this->parseSalariesFromString($payload['Pay']);
+
         $job->setOccupationalCategoryWithCodeAndTitle(
             $payload['OnetCode'],
             $payload['ONetFriendlyTitle']
@@ -87,7 +89,8 @@ class Careerbuilder extends AbstractProvider
             ->setState($payload['State'])
             ->setDatePostedAsString($payload['PostedDate'])
             ->setCompanyLogo($payload['CompanyImageURL'])
-            ->setMinimumSalary($payload['Pay']);
+            ->setMinimumSalary($pay['min'])
+            ->setMaximumSalary($pay['max']);
 
         if (isset($payload['Skills']['Skill'])) {
             $job->setSkills($this->getSkillSet($payload['Skills']['Skill']));
@@ -177,6 +180,34 @@ class Careerbuilder extends AbstractProvider
         );
 
         return http_build_query($queryString);
+    }
+
+    /**
+     * Get min and max salary numbers from string
+     *
+     * @return string
+     */
+    public function parseSalariesFromString($input = null)
+    {
+        $salary = [
+            'min' => null,
+            'max' => null
+        ];
+
+        $string = explode(' - ', $input);
+
+        if ($string[0] !== $input) {
+            $salary['min'] = str_replace('k', '000', $string[0]);
+        }
+
+        if (isset($string[1])) {
+            $max = explode('/', $string[1]);
+            if ($max[0] !== $string[1]) {
+                $salary['max'] = str_replace('k', '000', $max[0]);
+            }
+        }
+
+        return $salary;
     }
 
     /**
