@@ -7,7 +7,8 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/JobBrander/jobs-careerbuilder.svg?style=flat-square)](https://scrutinizer-ci.com/g/JobBrander/jobs-careerbuilder)
 [![Total Downloads](https://img.shields.io/packagist/dt/jobbrander/jobs-careerbuilder.svg?style=flat-square)](https://packagist.org/packages/jobbrander/jobs-careerbuilder)
 
-This package provides Careerbuilder Jobs API support for the JobBrander's [Jobs Client](https://github.com/JobBrander/jobs-common).
+This package provides [Careerbuilder Job Search API ](http://api.careerbuilder.com/Search/jobsearch/jobsearchinfo.aspx)
+support for the JobBrander's [Jobs Client](https://github.com/JobBrander/jobs-common).
 
 ## Installation
 
@@ -22,13 +23,16 @@ composer require jobbrander/jobs-careerbuilder
 Usage is the same as Job Branders's Jobs Client, using `\JobBrander\Jobs\Client\Provider\Careerbuilder` as the provider.
 
 ```php
-$client = new JobBrander\Jobs\Client\Provider\Careerbuilder(['developerKey' => 'YOUR CAREERBUILDER DEVELOPER KEY']);
+$client = new JobBrander\Jobs\Client\Provider\Careerbuilder([
+    'developerKey' => 'YOUR CAREERBUILDER DEVELOPER KEY'
+]);
 
 // Search for 200 job listings for 'project manager' in Chicago, IL
-$jobs = $client->setKeyword('project manager')
-    ->setCity('Chicago')
-    ->setState('IL')
-    ->setCount(100)
+$jobs = $client->setKeyword('engineer') // Can accept a single value, or a comma-separated list of values. Will return a results set that is related to the supplied keywords.
+    ->setCity('Pasadena')          // Accepts a comma-separated list of Cities and will limit the job search to that area.
+    ->setState('CA')               // Accepts a comma-separated list of denoted two letter State values and will limit the job search to that area.
+    ->setPage(2)                   // The page of listings to return. Defaults to 1.
+    ->setCount(20)                 // The number of listings per page. The default value is 10. The maximum value is 100.
     ->getJobs();
 ```
 
