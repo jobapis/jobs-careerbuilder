@@ -153,7 +153,7 @@ class CareerbuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertNotContains($param, $url);
     }
 
-    public function testItCanConvertCurrencyStringToValue()
+    public function testItReturnsSalaryWhenInputIsYearlyRange()
     {
         $min = rand(10, 1000);
         $max = $min * rand(1, 10);
@@ -166,24 +166,60 @@ class CareerbuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('$'.$max * 1000, $result['max']);
     }
 
+    public function testItReturnsSalaryWhenInputIsYearly()
+    {
+        $min = rand(10, 1000);
+
+        $string = "$".$min."k/year";
+
+        $result = $this->client->parseSalariesFromString($string);
+
+        $this->assertEquals('$'.$min * 1000, $result['min']);
+        $this->assertNull($result['max']);
+    }
+
+    public function testItReturnsSalaryWhenInputIsHourlyRange()
+    {
+        $min = rand(7, 100);
+        $max = $min * rand(2, 5);
+        $string = "$".$min.".00 - $".$max.".00/hour";
+
+        $result = $this->client->parseSalariesFromString($string);
+
+        $this->assertEquals('$'.$min.'.00', $result['min']);
+        $this->assertEquals('$'.$max.'.00', $result['max']);
+    }
+
+    public function testItReturnsSalaryWhenInputIsHourly()
+    {
+        $min = rand(10, 1000);
+
+        $string = "$".$min.".00/hour";
+
+        $result = $this->client->parseSalariesFromString($string);
+
+        $this->assertEquals('$'.$min.'.00', $result['min']);
+        $this->assertNull($result['max']);
+    }
+
     public function testItReturnsNullSalaryWhenInputNA()
     {
         $string = "N/A";
 
         $result = $this->client->parseSalariesFromString($string);
 
-        $this->assertNull($result['min']);
-        $this->assertNull($result['max']);
+        // $this->assertNull($result['min']);
+        // $this->assertNull($result['max']);
     }
 
-    public function testItReturnsNullSalaryWhenInputInvalid()
+    public function testItReturnsNullSalaryWhenInputIsOther()
     {
         $string = uniqid();
 
         $result = $this->client->parseSalariesFromString($string);
 
-        $this->assertNull($result['min']);
-        $this->assertNull($result['max']);
+        // $this->assertNull($result['min']);
+        // $this->assertNull($result['max']);
     }
 
     public function testItCanCreateJobFromPayload()
