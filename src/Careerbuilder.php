@@ -197,27 +197,27 @@ class Careerbuilder extends AbstractProvider
         switch ($input) {
             // Annual salary range
             case (preg_match("/^.\d+k\s-\s.\d+k\/year$/", $input) ? true : false):
-                preg_replace_callback("/(.\d+k)\s.\s(.\d+k)/", function($matches) use (&$salary) {
+                preg_replace_callback("/(.\d+k)\s.\s(.\d+k)/", function ($matches) use (&$salary) {
                     $salary['min'] = str_replace('k', '000', $matches[1]);
                     $salary['max'] = str_replace('k', '000', $matches[2]);
                 }, $input);
                 break;
             // Annual salary fixed
             case (preg_match("/^.\d+k\/year$/", $input) ? true : false):
-                preg_replace_callback("/(.\d+k)/", function($matches) use (&$salary) {
+                preg_replace_callback("/(.\d+k)/", function ($matches) use (&$salary) {
                     $salary['min'] = str_replace('k', '000', $matches[1]);
                 }, $input);
                 break;
             // Hourly salary range
             case (preg_match("/^.\d+.\d+\s-\s.\d+.\d+\/hour$/", $input) ? true : false):
-                preg_replace_callback("/(.\d+.\d+)\s.\s(.\d+.\d+)/", function($matches) use (&$salary) {
+                preg_replace_callback("/(.\d+.\d+)\s.\s(.\d+.\d+)/", function ($matches) use (&$salary) {
                     $salary['min'] = $matches[1];
                     $salary['max'] = $matches[2];
                 }, $input);
                 break;
             // Hourly salary fixed
             case (preg_match("/^.\d+.\d+\/hour$/", $input) ? true : false):
-                preg_replace_callback("/(.\d+.\d+)/", function($matches) use (&$salary) {
+                preg_replace_callback("/(.\d+.\d+)/", function ($matches) use (&$salary) {
                     $salary['min'] = $matches[1];
                 }, $input);
                 break;
