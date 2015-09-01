@@ -166,6 +166,16 @@ class CareerbuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('$'.$max * 1000, $result['max']);
     }
 
+    public function testItReturnsNullSalaryWhenInputNA()
+    {
+        $string = "N/A";
+
+        $result = $this->client->parseSalariesFromString($string);
+
+        $this->assertNull($result['min']);
+        $this->assertNull($result['max']);
+    }
+
     public function testItReturnsNullSalaryWhenInputInvalid()
     {
         $string = uniqid();

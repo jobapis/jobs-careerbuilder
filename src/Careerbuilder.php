@@ -185,7 +185,7 @@ class Careerbuilder extends AbstractProvider
     /**
      * Get min and max salary numbers from string
      *
-     * @return string
+     * @return array
      */
     public function parseSalariesFromString($input = null)
     {
