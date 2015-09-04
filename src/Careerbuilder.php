@@ -203,20 +203,15 @@ class Careerbuilder extends AbstractProvider
         foreach ($expressions as $key => $expression) {
             if (preg_match($expression, $input)) {
                 $method = 'parse'.$key;
-                $salary = $this->$method($input);
+                $salary = $this->$method($salary, $input);
             }
         }
 
         return $salary;
     }
 
-    public function parseAnnualRange($input)
+    public function parseAnnualRange($salary = [], $input = null)
     {
-        $salary = [
-            'min' => null,
-            'max' => null
-        ];
-
         preg_replace_callback("/(.\d+k)\s.\s(.\d+k)/", function ($matches) use (&$salary) {
             $salary['min'] = str_replace('k', '000', $matches[1]);
             $salary['max'] = str_replace('k', '000', $matches[2]);
@@ -225,13 +220,8 @@ class Careerbuilder extends AbstractProvider
         return $salary;
     }
 
-    public function parseAnnualFixed($input)
+    public function parseAnnualFixed($salary = [], $input = null)
     {
-        $salary = [
-            'min' => null,
-            'max' => null
-        ];
-
         preg_replace_callback("/(.\d+k)/", function ($matches) use (&$salary) {
             $salary['min'] = str_replace('k', '000', $matches[1]);
         }, $input);
@@ -239,13 +229,8 @@ class Careerbuilder extends AbstractProvider
         return $salary;
     }
 
-    public function parseHourlyRange($input)
+    public function parseHourlyRange($salary = [], $input = null)
     {
-        $salary = [
-            'min' => null,
-            'max' => null
-        ];
-
         preg_replace_callback("/(.\d+.\d+)\s.\s(.\d+.\d+)/", function ($matches) use (&$salary) {
             $salary['min'] = $matches[1];
             $salary['max'] = $matches[2];
@@ -254,13 +239,8 @@ class Careerbuilder extends AbstractProvider
         return $salary;
     }
 
-    public function parseHourlyFixed($input)
+    public function parseHourlyFixed($salary = [], $input = null)
     {
-        $salary = [
-            'min' => null,
-            'max' => null
-        ];
-
         preg_replace_callback("/(.\d+.\d+)/", function ($matches) use (&$salary) {
             $salary['min'] = $matches[1];
         }, $input);
