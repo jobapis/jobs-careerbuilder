@@ -206,28 +206,6 @@ class Careerbuilder extends AbstractProvider
                 $salary = $this->$method($input);
             }
         }
-        /*
-        switch ($input) {
-            // Annual salary range
-            case (preg_match($annualRangeExpression, $input) ? true : false):
-                $salary = $this->parseAnnualRange($input);
-                break;
-            // Annual salary fixed
-            case (preg_match($annualFixedExpression, $input) ? true : false):
-                $salary = $this->parseAnnualFixed($input);
-                break;
-            // Hourly salary range
-            case (preg_match($hourlyRangeExpression, $input) ? true : false):
-                $salary = $this->parseHourlyRange($input);
-                break;
-            // Hourly salary fixed
-            case (preg_match($hourlyFixedExpression, $input) ? true : false):
-                $salary = $this->parseHourlyFixed($input);
-                break;
-            default:
-                break;
-        }
-        */
 
         return $salary;
     }
