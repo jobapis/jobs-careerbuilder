@@ -193,37 +193,89 @@ class Careerbuilder extends AbstractProvider
             'min' => null,
             'max' => null
         ];
+        $annualRangeExpression = "/^.\d+k\s-\s.\d+k\/year$/";
+        $annualFixedExpression = "/^.\d+k\/year$/";
+        $hourlyRangeExpression = "/^.\d+.\d+\s-\s.\d+.\d+\/hour$/";
+        $hourlyFixedExpression = "/^.\d+.\d+\/hour$/";
 
         switch ($input) {
             // Annual salary range
-            case (preg_match("/^.\d+k\s-\s.\d+k\/year$/", $input) ? true : false):
-                preg_replace_callback("/(.\d+k)\s.\s(.\d+k)/", function ($matches) use (&$salary) {
-                    $salary['min'] = str_replace('k', '000', $matches[1]);
-                    $salary['max'] = str_replace('k', '000', $matches[2]);
-                }, $input);
+            case (preg_match($annualRangeExpression, $input) ? true : false):
+                $salary = $this->parseAnnualRange($input);
                 break;
             // Annual salary fixed
-            case (preg_match("/^.\d+k\/year$/", $input) ? true : false):
-                preg_replace_callback("/(.\d+k)/", function ($matches) use (&$salary) {
-                    $salary['min'] = str_replace('k', '000', $matches[1]);
-                }, $input);
+            case (preg_match($annualFixedExpression, $input) ? true : false):
+                $salary = $this->parseAnnualFixed($input);
                 break;
             // Hourly salary range
-            case (preg_match("/^.\d+.\d+\s-\s.\d+.\d+\/hour$/", $input) ? true : false):
-                preg_replace_callback("/(.\d+.\d+)\s.\s(.\d+.\d+)/", function ($matches) use (&$salary) {
-                    $salary['min'] = $matches[1];
-                    $salary['max'] = $matches[2];
-                }, $input);
+            case (preg_match($hourlyRangeExpression, $input) ? true : false):
+                $salary = $this->parseHourlyRange($input);
                 break;
             // Hourly salary fixed
-            case (preg_match("/^.\d+.\d+\/hour$/", $input) ? true : false):
-                preg_replace_callback("/(.\d+.\d+)/", function ($matches) use (&$salary) {
-                    $salary['min'] = $matches[1];
-                }, $input);
+            case (preg_match($hourlyFixedExpression, $input) ? true : false):
+                $salary = $this->parseHourlyFixed($input);
                 break;
             default:
                 break;
         }
+
+        return $salary;
+    }
+
+    public function parseAnnualRange($input)
+    {
+        $salary = [
+            'min' => null,
+            'max' => null
+        ];
+
+        preg_replace_callback("/(.\d+k)\s.\s(.\d+k)/", function ($matches) use (&$salary) {
+            $salary['min'] = str_replace('k', '000', $matches[1]);
+            $salary['max'] = str_replace('k', '000', $matches[2]);
+        }, $input);
+
+        return $salary;
+    }
+
+    public function parseAnnualFixed($input)
+    {
+        $salary = [
+            'min' => null,
+            'max' => null
+        ];
+
+        preg_replace_callback("/(.\d+k)/", function ($matches) use (&$salary) {
+            $salary['min'] = str_replace('k', '000', $matches[1]);
+        }, $input);
+
+        return $salary;
+    }
+
+    public function parseHourlyRange($input)
+    {
+        $salary = [
+            'min' => null,
+            'max' => null
+        ];
+
+        preg_replace_callback("/(.\d+.\d+)\s.\s(.\d+.\d+)/", function ($matches) use (&$salary) {
+            $salary['min'] = $matches[1];
+            $salary['max'] = $matches[2];
+        }, $input);
+
+        return $salary;
+    }
+
+    public function parseHourlyFixed($input)
+    {
+        $salary = [
+            'min' => null,
+            'max' => null
+        ];
+
+        preg_replace_callback("/(.\d+.\d+)/", function ($matches) use (&$salary) {
+            $salary['min'] = $matches[1];
+        }, $input);
 
         return $salary;
     }
