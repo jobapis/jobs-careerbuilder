@@ -193,11 +193,20 @@ class Careerbuilder extends AbstractProvider
             'min' => null,
             'max' => null
         ];
-        $annualRangeExpression = "/^.\d+k\s-\s.\d+k\/year$/";
-        $annualFixedExpression = "/^.\d+k\/year$/";
-        $hourlyRangeExpression = "/^.\d+.\d+\s-\s.\d+.\d+\/hour$/";
-        $hourlyFixedExpression = "/^.\d+.\d+\/hour$/";
+        $expressions = [
+            'annualRange' => "/^.\d+k\s-\s.\d+k\/year$/",
+            'annualFixed' => "/^.\d+k\/year$/",
+            'hourlyRange' => "/^.\d+.\d+\s-\s.\d+.\d+\/hour$/",
+            'hourlyFixed' => "/^.\d+.\d+\/hour$/",
+        ];
 
+        foreach ($expressions as $key => $expression) {
+            if (preg_match($expression, $input)) {
+                $method = 'parse'.$key;
+                $salary = $this->$method($input);
+            }
+        }
+        /*
         switch ($input) {
             // Annual salary range
             case (preg_match($annualRangeExpression, $input) ? true : false):
@@ -218,6 +227,7 @@ class Careerbuilder extends AbstractProvider
             default:
                 break;
         }
+        */
 
         return $salary;
     }
