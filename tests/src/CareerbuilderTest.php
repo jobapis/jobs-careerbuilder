@@ -14,18 +14,11 @@ class CareerbuilderTest extends \PHPUnit_Framework_TestCase
         $this->client = new Careerbuilder();
     }
 
-    public function testItWillUseJsonFormat()
+    public function testItWillUseXmlFormat()
     {
         $format = $this->client->getFormat();
 
         $this->assertEquals('xml', $format);
-    }
-
-    public function testItUsesUSHostSite()
-    {
-        $hostSite = $this->client->getHostSite();
-
-        $this->assertEquals('US', $hostSite);
     }
 
     public function testItWillUseGetHttpVerb()
