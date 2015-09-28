@@ -1,7 +1,7 @@
 # Changelog
 All Notable changes to `jobs-careerbuilder` will be documented in this file
 
-## 1.0.0 - 2015-09-XX
+## 1.0.0 - 2015-09-27
 
 ### Added
 - Support for all setter methods outlined in the [Careerbuilder API](http://api.careerbuilder.com/Search/jobsearch/jobsearchinfo.aspx)
