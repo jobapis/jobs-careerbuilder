@@ -13,6 +13,7 @@ All Notable changes to `jobs-careerbuilder` will be documented in this file
 
 ### Fixed
 - Sorting methods alphabetically
+- Travis-ci support for PHP 7.0 and HHVM
 
 ### Removed
 - Public "getSkillSet" replaced with protected "parseSkillSet" method
