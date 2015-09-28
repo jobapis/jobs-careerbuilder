@@ -77,6 +77,8 @@ class Careerbuilder extends AbstractProvider
             ]
         );
 
+        $pay = $this->parseSalariesFromString($payload['Pay']);
+
         $job->setOccupationalCategoryWithCodeAndTitle(
             $payload['OnetCode'],
             $payload['ONetFriendlyTitle']
@@ -87,7 +89,8 @@ class Careerbuilder extends AbstractProvider
             ->setState($payload['State'])
             ->setDatePostedAsString($payload['PostedDate'])
             ->setCompanyLogo($payload['CompanyImageURL'])
-            ->setMinimumSalary($payload['Pay']);
+            ->setMinimumSalary($pay['min'])
+            ->setMaximumSalary($pay['max']);
 
         if (isset($payload['Skills']['Skill'])) {
             $job->setSkills($this->getSkillSet($payload['Skills']['Skill']));
@@ -177,6 +180,72 @@ class Careerbuilder extends AbstractProvider
         );
 
         return http_build_query($queryString);
+    }
+
+    /**
+     * Get min and max salary numbers from string
+     *
+     * @return array
+     */
+    public function parseSalariesFromString($input = null)
+    {
+        $salary = [
+            'min' => null,
+            'max' => null
+        ];
+        $expressions = [
+            'annualRange' => "/^.\d+k\s-\s.\d+k\/year$/",
+            'annualFixed' => "/^.\d+k\/year$/",
+            'hourlyRange' => "/^.\d+.\d+\s-\s.\d+.\d+\/hour$/",
+            'hourlyFixed' => "/^.\d+.\d+\/hour$/",
+        ];
+
+        foreach ($expressions as $key => $expression) {
+            if (preg_match($expression, $input)) {
+                $method = 'parse'.$key;
+                $salary = $this->$method($salary, $input);
+            }
+        }
+
+        return $salary;
+    }
+
+    public function parseAnnualRange($salary = [], $input = null)
+    {
+        preg_replace_callback("/(.\d+k)\s.\s(.\d+k)/", function ($matches) use (&$salary) {
+            $salary['min'] = str_replace('k', '000', $matches[1]);
+            $salary['max'] = str_replace('k', '000', $matches[2]);
+        }, $input);
+
+        return $salary;
+    }
+
+    public function parseAnnualFixed($salary = [], $input = null)
+    {
+        preg_replace_callback("/(.\d+k)/", function ($matches) use (&$salary) {
+            $salary['min'] = str_replace('k', '000', $matches[1]);
+        }, $input);
+
+        return $salary;
+    }
+
+    public function parseHourlyRange($salary = [], $input = null)
+    {
+        preg_replace_callback("/(.\d+.\d+)\s.\s(.\d+.\d+)/", function ($matches) use (&$salary) {
+            $salary['min'] = $matches[1];
+            $salary['max'] = $matches[2];
+        }, $input);
+
+        return $salary;
+    }
+
+    public function parseHourlyFixed($salary = [], $input = null)
+    {
+        preg_replace_callback("/(.\d+.\d+)/", function ($matches) use (&$salary) {
+            $salary['min'] = $matches[1];
+        }, $input);
+
+        return $salary;
     }
 
     /**
