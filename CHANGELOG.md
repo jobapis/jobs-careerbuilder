@@ -1,6 +1,23 @@
 # Changelog
 All Notable changes to `jobs-careerbuilder` will be documented in this file
 
+## 0.2.0 - 2015-09-27
+
+### Added
+- Salary range to attribute conversion methods
+
+### Deprecated
+- Nothing
+
+### Fixed
+- Nothing
+
+### Removed
+- Nothing
+
+### Security
+- Nothing
+
 ## 0.1.5 - 2015-08-12
 
 ### Added
