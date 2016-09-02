@@ -1,160 +1,61 @@
 <?php namespace JobApis\Jobs\Client\Test;
 
+use JobApis\Jobs\Client\Collection;
+use JobApis\Jobs\Client\Job;
 use JobApis\Jobs\Client\Providers\CareerbuilderProvider;
+use JobApis\Jobs\Client\Queries\CareerbuilderQuery;
 use Mockery as m;
 
 class CareerbuilderProviderTest extends \PHPUnit_Framework_TestCase
 {
-    private $clientClass = 'JobBrander\Jobs\Client\Providers\AbstractProvider';
-    private $collectionClass = 'JobBrander\Jobs\Client\Collection';
-    private $jobClass = 'JobBrander\Jobs\Client\Job';
-
     public function setUp()
     {
-        $this->client = new Careerbuilder();
+        $this->query = m::mock('JobApis\Jobs\Client\Queries\CareerbuilderQuery');
+
+        $this->client = new CareerbuilderProvider($this->query);
     }
 
-    public function testItWillUseXmlFormat()
+    public function testItCanGetDefaultResponseFields()
     {
-        $format = $this->client->getFormat();
-
-        $this->assertEquals('xml', $format);
+        $fields = [
+            'Company',
+            'CompanyDetailsURL',
+            'DescriptionTeaser',
+            'DID',
+            'OnetCode',
+            'ONetFriendlyTitle',
+            'EmploymentType',
+            'EducationRequired',
+            'ExperienceRequired',
+            'JobDetailsURL',
+            'Location',
+            'City',
+            'State',
+            'PostedDate',
+            'Pay',
+            'JobTitle',
+            'CompanyImageURL',
+            'Skills',
+        ];
+        $this->assertEquals($fields, $this->client->getDefaultResponseFields());
     }
 
-    public function testItWillUseGetHttpVerb()
+    public function testItCanGetListingsPath()
     {
-        $verb = $this->client->getVerb();
-
-        $this->assertEquals('GET', $verb);
+        $this->assertEquals('Results.JobSearchResult', $this->client->getListingsPath());
     }
 
-    public function testListingPath()
+    public function testItCanGetResponseFormatXml()
     {
-        $path = $this->client->getListingsPath();
-
-        $this->assertEquals('Results.JobSearchResult', $path);
-    }
-
-    public function testItWillProvideEmptyParameters()
-    {
-        $parameters = $this->client->getParameters();
-
-        $this->assertEmpty($parameters);
-        $this->assertTrue(is_array($parameters));
-    }
-
-    public function testUrlIncludesKeywordWhenProvided()
-    {
-        $keyword = uniqid().' '.uniqid();
-        $param = 'Keywords='.urlencode($keyword);
-
-        $url = $this->client->setKeyword($keyword)->getUrl();
-
-        $this->assertContains($param, $url);
-    }
-
-    public function testUrlNotIncludesKeywordWhenNotProvided()
-    {
-        $param = 'Keywords=';
-
-        $url = $this->client->getUrl();
-
-        $this->assertNotContains($param, $url);
-    }
-
-    public function testUrlIncludesCityWhenCityProvided()
-    {
-        $city = uniqid();
-        $param = 'FacetCity='.urlencode($city);
-        $facetsParam = 'UseFacets=true';
-
-        $url = $this->client->setCity($city)->getUrl();
-
-        $this->assertContains($param, $url);
-        $this->assertContains($facetsParam, $url);
-    }
-
-    public function testUrlIncludesStateWhenStateProvided()
-    {
-        $state = uniqid();
-        $param = 'FacetState='.urlencode($state);
-        $facetsParam = 'UseFacets=true';
-
-        $url = $this->client->setState($state)->getUrl();
-
-        $this->assertContains($param, $url);
-        $this->assertContains($facetsParam, $url);
-    }
-
-    public function testUrlNotIncludesCityWhenNotProvided()
-    {
-        $param = 'FacetCity=';
-
-        $url = $this->client->getUrl();
-
-        $this->assertNotContains($param, $url);
-    }
-
-    public function testUrlNotIncludesStateWhenNotProvided()
-    {
-        $param = 'FacetState=';
-
-        $url = $this->client->getUrl();
-
-        $this->assertNotContains($param, $url);
-    }
-
-    public function testUrlIncludesPageWhenProvided()
-    {
-        $page = uniqid();
-        $param = 'PageNumber='.$page;
-        $collapseParam = 'EnableCompanyCollapse=true';
-
-        $url = $this->client->setPage($page)->getUrl();
-
-        $this->assertContains($param, $url);
-        $this->assertContains($collapseParam, $url);
-    }
-
-    public function testUrlNotIncludesPageWhenNotProvided()
-    {
-        $param = 'PageNumber=';
-
-        $url = $this->client->setPage(null)->getUrl();
-
-        $this->assertNotContains($param, $url);
-    }
-
-    public function testUrlIncludesCountWhenProvided()
-    {
-        $count = uniqid();
-        $param = 'PerPage='.$count;
-        $collapseParam = 'EnableCompanyCollapse=true';
-
-        $url = $this->client->setCount($count)->getUrl();
-
-        $this->assertContains($param, $url);
-        $this->assertContains($collapseParam, $url);
-    }
-
-    public function testUrlNotIncludesStartWhenNotProvided()
-    {
-        $param = 'PerPage=';
-
-        $url = $this->client->setCount(null)->getUrl();
-
-        $this->assertNotContains($param, $url);
+        $this->assertEquals('xml', $this->client->getFormat());
     }
 
     public function testItReturnsSalaryWhenInputIsYearlyRange()
     {
         $min = rand(10, 1000);
         $max = $min * rand(1, 10);
-
         $string = "$".$min."k - $".$max."k/year";
-
         $result = $this->client->parseSalariesFromString($string);
-
         $this->assertEquals('$'.$min * 1000, $result['min']);
         $this->assertEquals('$'.$max * 1000, $result['max']);
     }
@@ -162,11 +63,8 @@ class CareerbuilderProviderTest extends \PHPUnit_Framework_TestCase
     public function testItReturnsSalaryWhenInputIsYearly()
     {
         $min = rand(10, 1000);
-
         $string = "$".$min."k/year";
-
         $result = $this->client->parseSalariesFromString($string);
-
         $this->assertEquals('$'.$min * 1000, $result['min']);
         $this->assertNull($result['max']);
     }
@@ -176,9 +74,7 @@ class CareerbuilderProviderTest extends \PHPUnit_Framework_TestCase
         $min = rand(7, 100);
         $max = $min * rand(2, 5);
         $string = "$".$min.".00 - $".$max.".00/hour";
-
         $result = $this->client->parseSalariesFromString($string);
-
         $this->assertEquals('$'.$min.'.00', $result['min']);
         $this->assertEquals('$'.$max.'.00', $result['max']);
     }
@@ -186,11 +82,8 @@ class CareerbuilderProviderTest extends \PHPUnit_Framework_TestCase
     public function testItReturnsSalaryWhenInputIsHourly()
     {
         $min = rand(10, 1000);
-
         $string = "$".$min.".00/hour";
-
         $result = $this->client->parseSalariesFromString($string);
-
         $this->assertEquals('$'.$min.'.00', $result['min']);
         $this->assertNull($result['max']);
     }
@@ -198,31 +91,26 @@ class CareerbuilderProviderTest extends \PHPUnit_Framework_TestCase
     public function testItReturnsNullSalaryWhenInputNA()
     {
         $string = "N/A";
-
         $result = $this->client->parseSalariesFromString($string);
-
-        // $this->assertNull($result['min']);
-        // $this->assertNull($result['max']);
+        $this->assertNull($result['min']);
+        $this->assertNull($result['max']);
     }
 
     public function testItReturnsNullSalaryWhenInputIsOther()
     {
         $string = uniqid();
-
         $result = $this->client->parseSalariesFromString($string);
-
-        // $this->assertNull($result['min']);
-        // $this->assertNull($result['max']);
+        $this->assertNull($result['min']);
+        $this->assertNull($result['max']);
     }
 
-    public function testItCanCreateJobFromPayload()
+    public function testItCanCreateJobObjectFromPayload()
     {
-        $city = uniqid();
-        $this->client->setCity($city);
         $payload = $this->createJobArray();
 
         $results = $this->client->createJobObject($payload);
 
+        $this->assertInstanceOf(Job::class, $results);
         $this->assertEquals($payload['JobTitle'], $results->title);
         $this->assertEquals($payload['DescriptionTeaser'], $results->description);
         $this->assertEquals($payload['JobDetailsURL'], $results->url);
@@ -230,12 +118,8 @@ class CareerbuilderProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testItCanCreateJobFromPayloadWhenSingleSkillProvided()
     {
-        $city = uniqid();
-        $this->client->setCity($city);
         $payload = $this->createJobArrayWithSingleSkill();
-
         $results = $this->client->createJobObject($payload);
-
         $this->assertEquals($payload['JobTitle'], $results->title);
         $this->assertEquals($payload['DescriptionTeaser'], $results->description);
         $this->assertEquals($payload['JobDetailsURL'], $results->url);
@@ -243,55 +127,75 @@ class CareerbuilderProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testItCanCreateJobFromPayloadWhenInvalidSkillProvided()
     {
-        $city = uniqid();
-        $this->client->setCity($city);
         $payload = $this->createJobArrayWithInvalidSkill();
-
         $results = $this->client->createJobObject($payload);
-
         $this->assertEquals($payload['JobTitle'], $results->title);
         $this->assertEquals($payload['DescriptionTeaser'], $results->description);
         $this->assertEquals($payload['JobDetailsURL'], $results->url);
     }
 
-    public function testItCanConnect()
+    /**
+     * Integration test for the client's getJobs() method.
+     */
+    public function testItCanGetJobs()
     {
-        $provider = $this->getProviderAttributes(['format' => 'xml']);
-        $payload = [];
+        $options = [
+            'Keywords' => uniqid(),
+            'FacetCity' => uniqid(),
+            'DeveloperKey' => uniqid(),
+        ];
 
-        $responseBody = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><ResponseJobSearch><Results>";
+        $guzzle = m::mock('GuzzleHttp\Client');
 
-        for ($i = 0; $i < $provider['jobs_count']; $i++) {
-            $jobArray = $this->createJobArray();
-            $path = $provider['path'];
-            array_push($payload, $jobArray);
-            $responseBody .= "<JobSearchResult><JobTitle>".$jobArray['JobTitle']."</JobTitle>";
-            $responseBody .= "<PostedDate>".$jobArray['PostedDate']."</PostedDate>";
-            $responseBody .= "</JobSearchResult>";
-        }
+        $query = new CareerbuilderQuery($options);
 
-        $responseBody .= "</Results></ResponseJobSearch>";
+        $client = new CareerbuilderProvider($query);
 
-        $job = m::mock($this->jobClass);
-        $job->shouldReceive('setQuery')->with($provider['keyword'])
-            ->times($provider['jobs_count'])->andReturnSelf();
-        $job->shouldReceive('setSource')->with($provider['source'])
-            ->times($provider['jobs_count'])->andReturnSelf();
+        $client->setClient($guzzle);
 
         $response = m::mock('GuzzleHttp\Message\Response');
-        $response->shouldReceive('getBody')->once()->andReturn($responseBody);
 
-        $http = m::mock('GuzzleHttp\Client');
-        $http->shouldReceive(strtolower($this->client->getVerb()))
-            ->with($this->client->getUrl(), $this->client->getHttpClientOptions())
+        $jobs = $this->getXmlJobs();
+
+        $guzzle->shouldReceive('get')
+            ->with($query->getUrl(), [])
             ->once()
             ->andReturn($response);
-        $this->client->setClient($http);
+        $response->shouldReceive('getBody')
+            ->once()
+            ->andReturn($jobs);
 
-        $results = $this->client->getJobs();
+        $results = $client->getJobs();
 
-        $this->assertInstanceOf($this->collectionClass, $results);
-        $this->assertCount($provider['jobs_count'], $results);
+        $this->assertInstanceOf(Collection::class, $results);
+        $this->assertCount(3, $results);
+    }
+
+    /**
+     * Integration test with actual API call to the provider.
+     */
+    public function testItCanGetJobsFromApi()
+    {
+        if (!getenv('DEVELOPER_KEY')) {
+            $this->markTestSkipped('DEVELOPER_KEY not set. Real API call will not be made.');
+        }
+
+        $keyword = 'engineering';
+
+        $query = new CareerbuilderQuery([
+            'Keywords' => $keyword,
+            'DeveloperKey' => getenv('DEVELOPER_KEY'),
+        ]);
+
+        $client = new CareerbuilderProvider($query);
+
+        $results = $client->getJobs();
+
+        $this->assertInstanceOf('JobApis\Jobs\Client\Collection', $results);
+
+        foreach($results as $job) {
+            $this->assertEquals($keyword, $job->query);
+        }
     }
 
     private function createJobArray() {
@@ -299,6 +203,7 @@ class CareerbuilderProviderTest extends \PHPUnit_Framework_TestCase
             'Company' => uniqid(),
             'CompanyDetailsURL' => uniqid(),
             'DescriptionTeaser' => uniqid(),
+            'DID' => uniqid(),
             'OnetCode' => uniqid(),
             'ONetFriendlyTitle' => uniqid(),
             'EmploymentType' => uniqid(),
@@ -328,6 +233,7 @@ class CareerbuilderProviderTest extends \PHPUnit_Framework_TestCase
             'Company' => uniqid(),
             'CompanyDetailsURL' => uniqid(),
             'DescriptionTeaser' => uniqid(),
+            'DID' => uniqid(),
             'OnetCode' => uniqid(),
             'ONetFriendlyTitle' => uniqid(),
             'EmploymentType' => uniqid(),
@@ -352,6 +258,7 @@ class CareerbuilderProviderTest extends \PHPUnit_Framework_TestCase
             'Company' => uniqid(),
             'CompanyDetailsURL' => uniqid(),
             'DescriptionTeaser' => uniqid(),
+            'DID' => uniqid(),
             'OnetCode' => uniqid(),
             'ONetFriendlyTitle' => uniqid(),
             'EmploymentType' => uniqid(),
@@ -371,17 +278,87 @@ class CareerbuilderProviderTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    private function getProviderAttributes($attributes = [])
+    private function getXmlJobs()
     {
-        $defaults = [
-            'path' => uniqid(),
-            'format' => 'json',
-            'keyword' => uniqid(),
-            'source' => uniqid(),
-            'params' => [uniqid()],
-            'jobs_count' => rand(2,10),
-
-        ];
-        return array_replace($defaults, $attributes);
+        return "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
+        <ResponseJobSearch>
+            <Results>
+                <JobSearchResult>
+                    <Company>57c9f9c746716</Company>
+                    <CompanyDetailsURL>57c9f9c746731</CompanyDetailsURL>
+                    <DescriptionTeaser>57c9f9c746759</DescriptionTeaser>
+                    <DID>57c9f9c746778</DID>
+                    <OnetCode>57c9f9c746783</OnetCode>
+                    <ONetFriendlyTitle>57c9f9c74679f</ONetFriendlyTitle>
+                    <EmploymentType>57c9f9c7467aa</EmploymentType>
+                    <EducationRequired>57c9f9c7467c6</EducationRequired>
+                    <ExperienceRequired>57c9f9c7467d1</ExperienceRequired>
+                    <JobDetailsURL>57c9f9c7467ed</JobDetailsURL>
+                    <Location>57c9f9c7467f8</Location>
+                    <City>57c9f9c746814</City>
+                    <State>57c9f9c74681f</State>
+                    <PostedDate>09/02/2016</PostedDate>
+                    <Pay>57c9f9c746847</Pay>
+                    <JobTitle>57c9f9c74684f</JobTitle>
+                    <CompanyImageURL>57c9f9c74685a</CompanyImageURL>
+                    <Skills>
+                        <Skill>57c9f9c746862</Skill>
+                        <Skill>57c9f9c74686d</Skill>
+                        <Skill>57c9f9c746889</Skill>
+                        <Skill>57c9f9c746894</Skill>
+                    </Skills>
+                </JobSearchResult>
+                <JobSearchResult>
+                    <Company>57c9f9c7468ce</Company>
+                    <CompanyDetailsURL>57c9f9c7468e3</CompanyDetailsURL>
+                    <DescriptionTeaser>57c9f9c7468f7</DescriptionTeaser>
+                    <DID>57c9f9c746902</DID>
+                    <OnetCode>57c9f9c74691e</OnetCode>
+                    <ONetFriendlyTitle>57c9f9c746932</ONetFriendlyTitle>
+                    <EmploymentType>57c9f9c74693d</EmploymentType>
+                    <EducationRequired>57c9f9c746962</EducationRequired>
+                    <ExperienceRequired>57c9f9c74696c</ExperienceRequired>
+                    <JobDetailsURL>57c9f9c746974</JobDetailsURL>
+                    <Location>57c9f9c74697c</Location>
+                    <City>57c9f9c746985</City>
+                    <State>57c9f9c74698d</State>
+                    <PostedDate>09/02/2016</PostedDate>
+                    <Pay>57c9f9c74699c</Pay>
+                    <JobTitle>57c9f9c7469a5</JobTitle>
+                    <CompanyImageURL>57c9f9c7469ad</CompanyImageURL>
+                    <Skills>
+                        <Skill>57c9f9c7469b5</Skill>
+                        <Skill>57c9f9c7469bd</Skill>
+                        <Skill>57c9f9c7469c5</Skill>
+                        <Skill>57c9f9c7469ce</Skill>
+                    </Skills>
+                </JobSearchResult>
+                <JobSearchResult>
+                    <Company>57c9f9c7469f3</Company>
+                    <CompanyDetailsURL>57c9f9c7469fb</CompanyDetailsURL>
+                    <DescriptionTeaser>57c9f9c746a04</DescriptionTeaser>
+                    <DID>57c9f9c746a0d</DID>
+                    <OnetCode>57c9f9c746a15</OnetCode>
+                    <ONetFriendlyTitle>57c9f9c746a1d</ONetFriendlyTitle>
+                    <EmploymentType>57c9f9c746a25</EmploymentType>
+                    <EducationRequired>57c9f9c746a2d</EducationRequired>
+                    <ExperienceRequired>57c9f9c746a36</ExperienceRequired>
+                    <JobDetailsURL>57c9f9c746a3e</JobDetailsURL>
+                    <Location>57c9f9c746a46</Location>
+                    <City>57c9f9c746a4e</City>
+                    <State>57c9f9c746a56</State>
+                    <PostedDate>09/02/2016</PostedDate>
+                    <Pay>57c9f9c746a65</Pay>
+                    <JobTitle>57c9f9c746a6d</JobTitle>
+                    <CompanyImageURL>57c9f9c746a75</CompanyImageURL>
+                    <Skills>
+                        <Skill>57c9f9c746a7e</Skill>
+                        <Skill>57c9f9c746a86</Skill>
+                        <Skill>57c9f9c746a8f</Skill>
+                        <Skill>57c9f9c746a97</Skill>
+                    </Skills>
+                </JobSearchResult>
+            </Results>
+        </ResponseJobSearch>";
     }
 }

@@ -5,69 +5,14 @@ use JobApis\Jobs\Client\Job;
 class CareerbuilderProvider extends AbstractProvider
 {
     /**
-     * Default return attributes
-     *
-     * @var array
-     */
-    protected $defaultAttributes = [
-        'Company',
-        'CompanyDetailsURL',
-        'DescriptionTeaser',
-        'DID',
-        'OnetCode',
-        'ONetFriendlyTitle',
-        'EmploymentType',
-        'EducationRequired',
-        'ExperienceRequired',
-        'JobDetailsURL',
-        'Location',
-        'City',
-        'State',
-        'PostedDate',
-        'Pay',
-        'JobTitle',
-        'CompanyImageURL',
-        'Skills',
-    ];
-
-    /**
-     * Create new Careerbuilder jobs client.
-     *
-     * @param array $parameters
-     */
-    public function __construct($parameters = [])
-    {
-        parent::__construct($parameters);
-        array_walk($parameters, [$this, 'updateQuery']);
-    }
-
-    /**
-     * Magic method to handle get and set methods for properties
-     *
-     * @param  string $method
-     * @param  array  $parameters
-     *
-     * @return mixed
-     */
-    public function __call($method, $parameters)
-    {
-        if (isset($this->queryMap[$method], $parameters[0])) {
-            $this->updateQuery($parameters[0], $this->queryMap[$method]);
-        }
-        return parent::__call($method, $parameters);
-    }
-
-    /**
      * Returns the standardized job object
      *
      * @param array $payload Raw job payload from the API
      *
-     * @return \JobBrander\Jobs\Client\Job
+     * @return \JobApis\Jobs\Client\Job
      */
     public function createJobObject($payload = [])
     {
-        $payload = static::parseAttributeDefaults($payload, $this->defaultAttributes);
-
         $job = new Job([
             'description' => $payload['DescriptionTeaser'],
             'employmentType' => $payload['EmploymentType'],
@@ -99,6 +44,35 @@ class CareerbuilderProvider extends AbstractProvider
         }
 
         return $job;
+    }
+
+    /**
+     * Job response object default keys that should be set
+     *
+     * @return  string
+     */
+    public function getDefaultResponseFields()
+    {
+        return [
+            'Company',
+            'CompanyDetailsURL',
+            'DescriptionTeaser',
+            'DID',
+            'OnetCode',
+            'ONetFriendlyTitle',
+            'EmploymentType',
+            'EducationRequired',
+            'ExperienceRequired',
+            'JobDetailsURL',
+            'Location',
+            'City',
+            'State',
+            'PostedDate',
+            'Pay',
+            'JobTitle',
+            'CompanyImageURL',
+            'Skills',
+        ];
     }
 
     /**
