@@ -1,6 +1,15 @@
 # Changelog
 All Notable changes to `jobs-careerbuilder` will be documented in this file
 
+## 2.0.0-alpha - 2016-09-02
+
+### Added
+- Support for v.2 of jobs-common package
+- Automatically format results as `json` to prevent parsing failures
+
+### Removed
+- Old set_() methods in provider, moved to CareerbuilderQuery
+
 ## 1.0.0 - 2015-09-27
 
 ### Added
