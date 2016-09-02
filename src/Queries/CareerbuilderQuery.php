@@ -1,8 +1,8 @@
-<?php namespace JobBrander\Jobs\Client\Providers;
+<?php namespace JobApis\Jobs\Client\Queries;
 
-use JobBrander\Jobs\Client\Job;
+use JobApis\Jobs\Client\Job;
 
-class Careerbuilder extends AbstractProvider
+class CareerbuilderQuery extends AbstractProvider
 {
     /**
      * Default return attributes

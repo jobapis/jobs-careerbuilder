@@ -1,4 +1,4 @@
-<?php namespace JobBrander\Jobs\Client\Providers\Test;
+<?php namespace JobBrander\Jobs\Client\Test;
 
 use JobBrander\Jobs\Client\Providers\Careerbuilder;
 use Mockery as m;
