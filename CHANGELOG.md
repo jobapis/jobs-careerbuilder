@@ -1,6 +1,11 @@
 # Changelog
 All Notable changes to `jobs-careerbuilder` will be documented in this file
 
+## 2.0.0 - 2016-09-03
+
+### Added
+- New package name in composer file.
+
 ## 2.0.0-alpha - 2016-09-02
 
 ### Added
