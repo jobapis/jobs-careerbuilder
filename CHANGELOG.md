@@ -1,6 +1,11 @@
 # Changelog
 All Notable changes to `jobs-careerbuilder` will be documented in this file
 
+## 2.0.1 - 2016-09-05
+
+### Fixed
+- Changed API url to `v2` as there are no functional differences and `v1` is likely to be unsupported soon.
+
 ## 2.0.0 - 2016-09-03
 
 ### Added
