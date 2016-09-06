@@ -20,7 +20,7 @@ class CareerbuilderQueryTest extends \PHPUnit_Framework_TestCase
     public function testItCanGetBaseUrl()
     {
         $this->assertEquals(
-            'http://api.careerbuilder.com/v1/jobsearch',
+            'http://api.careerbuilder.com/v2/jobsearch',
             $this->query->getBaseUrl()
         );
     }

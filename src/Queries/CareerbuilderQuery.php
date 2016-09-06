@@ -485,7 +485,7 @@ class CareerbuilderQuery extends AbstractQuery
      */
     public function getBaseUrl()
     {
-        return 'http://api.careerbuilder.com/v1/jobsearch';
+        return 'http://api.careerbuilder.com/v2/jobsearch';
     }
 
     /**
