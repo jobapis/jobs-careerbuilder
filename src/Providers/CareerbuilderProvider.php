@@ -31,9 +31,13 @@ class CareerbuilderProvider extends AbstractProvider
             $payload['ONetFriendlyTitle']
         )->setCompany($payload['Company'])
             ->setCompanyUrl($payload['CompanyDetailsURL'])
-            ->setLocation($payload['City'].', '.$payload['State'])
-            ->setCity($payload['City'])
-            ->setState($payload['State'])
+            ->setLocation(
+                $this->parseLocationElement($payload['City'])
+                .', '.
+                $this->parseLocationElement($payload['State'])
+            )
+            ->setCity($this->parseLocationElement($payload['City']))
+            ->setState($this->parseLocationElement($payload['State']))
             ->setDatePostedAsString($payload['PostedDate'])
             ->setCompanyLogo($payload['CompanyImageURL'])
             ->setMinimumSalary($pay['min'])
@@ -179,6 +183,21 @@ class CareerbuilderProvider extends AbstractProvider
         }, $input);
 
         return $salary;
+    }
+
+    /**
+     * Makes sure that city/state is a string
+     *
+     * @param $element mixed
+     *
+     * @return string|null
+     */
+    protected function parseLocationElement($element)
+    {
+        if (is_string($element)) {
+            return $element;
+        }
+        return '';
     }
 
     /**

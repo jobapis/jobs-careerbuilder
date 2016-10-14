@@ -134,6 +134,16 @@ class CareerbuilderProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($payload['JobDetailsURL'], $results->url);
     }
 
+    public function testItCanCreateJobFromPayloadWhenLocationArrayProvided()
+    {
+        $payload = $this->createJobArrayWithLocationElementArray();
+        $results = $this->client->createJobObject($payload);
+        $this->assertEquals($payload['JobTitle'], $results->title);
+        $this->assertEquals($payload['DescriptionTeaser'], $results->description);
+        $this->assertEquals($payload['JobDetailsURL'], $results->url);
+        $this->assertEquals(', '.$payload['State'], $results->location);
+    }
+
     /**
      * Integration test for the client's getJobs() method.
      */
@@ -267,6 +277,31 @@ class CareerbuilderProviderTest extends \PHPUnit_Framework_TestCase
             'JobDetailsURL' => uniqid(),
             'Location' => uniqid(),
             'City' => uniqid(),
+            'State' => uniqid(),
+            'PostedDate' => date('m/d/Y'),
+            'Pay' => uniqid(),
+            'JobTitle' => uniqid(),
+            'CompanyImageURL' => uniqid(),
+            'Skills' => [
+                'Skill' => new \stdClass()
+            ]
+        ];
+    }
+
+    private function createJobArrayWithLocationElementArray() {
+        return [
+            'Company' => uniqid(),
+            'CompanyDetailsURL' => uniqid(),
+            'DescriptionTeaser' => uniqid(),
+            'DID' => uniqid(),
+            'OnetCode' => uniqid(),
+            'ONetFriendlyTitle' => uniqid(),
+            'EmploymentType' => uniqid(),
+            'EducationRequired' => uniqid(),
+            'ExperienceRequired' => uniqid(),
+            'JobDetailsURL' => uniqid(),
+            'Location' => uniqid(),
+            'City' => [],
             'State' => uniqid(),
             'PostedDate' => date('m/d/Y'),
             'Pay' => uniqid(),
