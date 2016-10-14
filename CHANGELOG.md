@@ -1,6 +1,11 @@
 # Changelog
 All Notable changes to `jobs-careerbuilder` will be documented in this file
 
+## 2.0.2 - 2016-10-14
+
+### Fixed
+- Handling when Careerbuilder returns empty array instead of strings for city/state.
+
 ## 2.0.1 - 2016-09-05
 
 ### Fixed
