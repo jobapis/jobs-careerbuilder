@@ -1,6 +1,11 @@
 # Changelog
 All Notable changes to `jobs-careerbuilder` will be documented in this file
 
+## 2.0.3 - 2016-11-01
+
+### Fixed
+- Updated `jobs-common` package to fix issue with single responses.
+
 ## 2.0.2 - 2016-10-14
 
 ### Fixed
